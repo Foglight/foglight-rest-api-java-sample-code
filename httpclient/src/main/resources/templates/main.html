@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:include="common/fragments :: head-common"></head>
+<body>
+	<div th:replace="common/fragments :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div th:replace="common/fragments :: navigation"></div>
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<h3 class="page-header">Global Configurations</h3>
+				<div class="table-container">
+					<div th:include="common/fragments :: operation-message-container"></div>
+					<form class="form-global-configuration" action="#" th:action="@{/globalConfiguration/update}" th:object="${globalConfiguration}" method="post">
+						<table class="table table-striped table-bordered" cellspacing="0" width="100%">
+			                <tbody>
+			                	<tr>
+			                    	<td><h5>Server URL</h5></td>
+			                        <td><input class="form-control" type="text" th:field="*{serverUrl}" /></td>
+			                    </tr>
+			                    <tr>
+			                    	<td><h5>Server Port</h5></td>
+			                        <td><input class="form-control" type="text" th:field="*{serverPort}" /></td>
+			                    </tr>
+			                    <tr>
+			                    	<td><h5>Auth-Token</h5></td>
+			                        <td><input class="form-control" type="text" th:field="*{authToken}" /></td>
+			                    </tr>
+			                    <tr>
+			                    	<td><h5>Username</h5></td>
+			                        <td><input class="form-control" type="text" th:field="*{username}" /></td>
+			                    </tr>
+			                    <tr>
+			                    	<td><h5>Password</h5></td>
+			                        <td><input class="form-control" type="text" th:field="*{password}" /></td>
+			                    </tr>
+			                    <tr>
+			                    	<td><h5>Security Login Type:</h5></td>
+			                    	<td><select class="form-control" th:field="*{securityLoginType}">
+										    <option th:each="sly : ${securityLoginTypes}" th:value="${sly}" th:text="${sly}"></option>
+										</select></td>
+			                    </tr>
+			                    <tr>
+			                    	<td colspan="2">
+			                    		<button type="submit" class="btn btn-success">Update</button>
+			                    	</td>
+			                    </tr>
+			                </tbody>
+			            </table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:replace="common/fragments :: common-scripts"></div>
+</body>
+</html>

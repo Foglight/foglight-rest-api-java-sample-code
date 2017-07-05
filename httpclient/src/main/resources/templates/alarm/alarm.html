@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/fragments :: head-common"></head>
+<body>
+	<div th:replace="common/fragments :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div th:replace="common/fragments :: navigation"></div>
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<h2 class="page-header">Alarm Sample</h2>
+				<div class="table-container">
+					<div th:include="common/fragments :: operation-message-container"></div>
+					<form class="form-alarm" action="#" th:action="@{/alarm/configure}" th:object="${alarmConfiguration}" method="post">
+						<table cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<td colspan="6"><h4>Severity Threshold</h4>
+													<div style="background:#eeeeee;width:100%">The maximum alarms count classified by severity under your expectation.</div></td>
+								</tr>
+								<tr>
+									<td style="padding-right:20px"><h6>Severity 1</h6><input class="form-control" type="text" th:field="*{severity1Threshold}" /></td>
+									<td style="padding-right:20px"><h6>Severity 2</h6><input class="form-control" type="text" th:field="*{severity2Threshold}" /></td>
+									<td style="padding-right:20px"><h6>Severity 3</h6><input class="form-control" type="text" th:field="*{severity3Threshold}" /></td>
+									<td style="padding-right:20px"><h6>Severity 4</h6><input class="form-control" type="text" th:field="*{severity4Threshold}" /></td>
+									<td style="padding-right:20px"><h6>Severity 5</h6><input class="form-control" type="text" th:field="*{severity5Threshold}" /></td>
+									<td><h6>&nbsp;</h6><button type="submit" class="btn btn-success">Configure</button></td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr><td colspan="6" height="50"></td></tr>
+								<tr><td colspan="6"><h4>Severity Alarms (Alarm Count / Threshold)</h4>
+									<div style="background:#eeeeee;width:100%">Count of alarms classified by severity to reach the threshold you set above.</div></td></tr>
+								<tr>
+									<td><h4>Severity 1</h4>
+										<span class="hidden" id="severity1-data" th:text="${alarmSeverityStatistics.severity1} "></span>
+										<svg id="fillgauge1" width="60%" onclick="gauge1.update(clearAlarm(1));"></svg>
+									</td>
+									<td><h4>Severity 2</h4>
+										<span class="hidden" id="severity2-data" th:text="${alarmSeverityStatistics.severity2}"></span>
+										<svg id="fillgauge2" width="60%" onclick="gauge2.update(acknowledge(2));" title="click to acknowledge"></svg>
+									</td>
+									<td><h4>Severity 3</h4>
+										<span class="hidden" id="severity3-data" th:text="${alarmSeverityStatistics.severity3}"></span>
+										<svg id="fillgauge3" width="60%" onclick="gauge3.update(clearAlarm(3));" title="click to clear"></svg>
+									</td>
+									<td><h4>Severity 4</h4>
+										<span class="hidden" id="severity4-data" th:text="${alarmSeverityStatistics.severity4}"></span>
+										<svg id="fillgauge4" width="60%" onclick="gauge4.update(acknowledge(4));" title="click to acknowledge"></svg>
+									</td>
+									<td><h4>Severity 5</h4>
+										<span class="hidden" id="severity5-data" th:text="${alarmSeverityStatistics.severity5}"></span>
+										<svg id="fillgauge5" width="60%" onclick="gauge5.update(clearAlarm(5));" title="click to clear"></svg>
+									</td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:replace="common/fragments :: common-scripts"></div>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="/javascript/d3-extension/liquidFillGauge.js"></script>
+	<script type="text/javascript">
+	
+		var config1 = liquidFillGaugeDefaultSettings();
+		config1.circleThickness = 0.4;
+		config1.circleColor = "#6DA398";
+		config1.textColor = "#0E5144";
+	    config1.waveTextColor = "#6DA398";
+	    config1.waveColor = "#246D5F";
+	    config1.textVertPosition = 0.52;
+	    config1.waveAnimateTime = 5000;
+	    config1.waveHeight = 0;
+	    config1.waveAnimate = false;
+	    config1.waveCount = 2;
+	    config1.waveOffset = 0.25;
+	    config1.textSize = 1.2;
+	    config1.minValue = 30;
+	    config1.maxValue = 150
+	    config1.displayPercent = false;
+		var gauge1 = loadLiquidFillGauge("fillgauge1", parseFloat(document.getElementById("severity1-data").innerHTML), config1);
+		$('#fillgauge1').tooltip();
+		
+		var config2 = liquidFillGaugeDefaultSettings();
+		config2.circleColor = "#FF7777";
+		config2.textColor = "#FF4444";
+		config2.waveTextColor = "#FFAAAA";
+		config2.waveColor = "#FFDDDD";
+		config2.circleThickness = 0.2;
+		config2.textVertPosition = 0.2;
+		config2.waveAnimateTime = 1000;
+	    var gauge2= loadLiquidFillGauge("fillgauge2", parseFloat(document.getElementById("severity2-data").innerHTML), config2);
+	    
+	    var config3 = liquidFillGaugeDefaultSettings();
+	    config3.circleColor = "#D4AB6A";
+	    config3.textColor = "#553300";
+	    config3.waveTextColor = "#805615";
+	    config3.waveColor = "#AA7D39";
+	    config3.circleThickness = 0.1;
+	    config3.circleFillGap = 0.2;
+	    config3.textVertPosition = 0.8;
+	    config3.waveAnimateTime = 2000;
+	    config3.waveHeight = 0.3;
+	    config3.waveCount = 1;
+	    var gauge3 = loadLiquidFillGauge("fillgauge3", parseFloat(document.getElementById("severity3-data").innerHTML), config3);
+	    
+	    var config4 = liquidFillGaugeDefaultSettings();
+	    config4.textVertPosition = 0.8;
+	    config4.waveAnimateTime = 5000;
+	    config4.waveHeight = 0.15;
+	    config4.waveAnimate = false;
+	    config4.waveOffset = 0.25;
+	    config4.valueCountUp = false;
+	    config4.displayPercent = false;
+	    var gauge4 = loadLiquidFillGauge("fillgauge4", parseFloat(document.getElementById("severity4-data").innerHTML), config4);
+	    
+	    var config5 = liquidFillGaugeDefaultSettings();
+	    config5.circleThickness = 0.15;
+	    config5.circleColor = "#808015";
+	    config5.textColor = "#555500";
+	    config5.waveTextColor = "#FFFFAA";
+	    config5.waveColor = "#AAAA39";
+	    config5.textVertPosition = 0.8;
+	    config5.waveAnimateTime = 1000;
+	    config5.waveHeight = 0.05;
+	    config5.waveAnimate = true;
+	    config5.waveRise = false;
+	    config5.waveHeightScaling = false;
+	    config5.waveOffset = 0.25;
+	    config5.textSize = 0.75;
+	    config5.waveCount = 3;
+	    var gauge5 = loadLiquidFillGauge("fillgauge5", parseFloat(document.getElementById("severity5-data").innerHTML), config5);
+	    
+	    function acknowledge(severity) {
+	    	var result = 0;
+	    	$.ajax({
+	    	    type: "GET",
+	    	    url: "/alarm/ack/" + severity,                   
+	    	    dataType: "json",
+	    	    success: function(json){
+	    	    	if (json != null) {
+	    	    		document.getElementById("severity" + severity + "-data").innerHTML = json.count;
+	    	    		result = parseFloat(json.count);
+	    	    	} else {
+	    	    		result = parseFloat(document.getElementById("severity" + severity + "-data").innerHTML);
+	    	    	}
+	    	    },
+	    	    async: false
+	    	});
+	    	return result;
+	    }
+	    
+	    function clearAlarm(severity) {
+	    	var result = 0;
+	    	$.ajax({
+	    	    type: "GET",
+	    	    url: "/alarm/clear/" + severity,                   
+	    	    dataType: "json",
+	    	    success: function(json){
+	    	    	if (json != null) {
+	    	    		document.getElementById("severity" + severity + "-data").innerHTML = json.count;
+	    	    		result = parseFloat(json.count); 
+	    	    	} else {
+	    	    		result = parseFloat(document.getElementById("severity" + severity + "-data").innerHTML);
+	    	    	}
+	    	    },
+	    	    async: false
+	    	});
+	    	return result;
+	    }
+	</script>
+</body>
+</html>

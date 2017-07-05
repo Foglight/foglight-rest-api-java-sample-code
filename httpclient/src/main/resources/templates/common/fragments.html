@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head-common">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Foglight RestfulAPI Sample</title>
+<link href="/css/bootstrap-3.3.6.min.css" rel="stylesheet" type="text/css" />
+<link href="/css/ks.dashboard.css" rel="stylesheet" type="text/css" />
+<style>
+    .liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
+</style>
+
+</head>
+<body>
+	<div th:fragment="header">
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Foglight Restful API Sample</a>
+			</div>
+		</div>
+	</nav>
+	</div>
+	
+	<div th:fragment="operation-message-container">
+	<div class="alert alert-warning" id="warning-alert" th:unless="${#strings.isEmpty(errorMessage)}">
+	    <button type="button" class="close" data-dismiss="alert">x</button>
+	    <strong>Message</strong>
+	    <span class="message-content" th:text="${errorMessage}"></span>
+	</div>
+	<div class="alert alert-success" id="success-alert" th:unless="${#strings.isEmpty(successMessage)}">
+	    <button type="button" class="close" data-dismiss="alert">x</button>
+	    <strong>Message</strong>
+	    <span class="message-content" th:text="${successMessage}"></span>
+	</div>
+	</div>
+	
+	<div th:fragment="navigation">
+	<div class="col-sm-3 col-md-2 sidebar">
+        <ul class="nav nav-sidebar">
+          <li id="nav-globalConfiguration"><a href="/">Global Configuration</a></li>
+        </ul>
+        <ul class="nav nav-sidebar">
+          <li id="nav-agent"><a href="/alarm">Alarm Samples</a></li>
+          <li id="nav-alarm"><a href="/utilization">Utilization Samples</a></li>
+          <!-- <li id="nav-rule"><a href="/runscript">Run Script Samples</a></li> -->
+        </ul>
+      </div>
+    </div>
+    
+    <div th:fragment="common-scripts">
+    	<script src="/javascript/jquery-2.1.4.min.js"></script>
+		<script src="/javascript/bootstrap-3.3.6.min.js"></script>
+		<script src="/javascript/ks.main.js"></script>
+    </div>
+    <div th:fragment="display-scripts">
+    	<script src="/javascript/jquery-2.1.4.min.js"></script>
+		<script src="/javascript/bootstrap-3.3.6.min.js"></script>
+		<script src="/javascript/ks.main.js"></script>
+		<script src="/javascript/ks.navigation.js"></script>
+    	<script src="/javascript/jquery-datatables-1.10.10/dataTables.bootstrap.min.js"></script>
+		<script src="/javascript/jquery-datatables-1.10.10/jquery.dataTables.min.js"></script>
+		<script src="/javascript/ks.dataTables.bootstrap.js"></script>
+    </div>
+    <div th:fragment="modification-scripts">
+    	<script src="/javascript/jquery-2.1.4.min.js"></script>
+		<script src="/javascript/bootstrap-3.3.6.min.js"></script>
+		<script src="/javascript/ks.main.js"></script>
+		<script src="/javascript/ks.navigation.js"></script>
+    	<script src="/javascript/bootstrap-fileinput-4.2.8/canvas-to-blob.min.js"></script>
+		<script src="/javascript/bootstrap-fileinput-4.2.8/fileinput_locale_zh.js"></script>
+		<script src="/javascript/bootstrap-fileinput-4.2.8/fileinput.min.js"></script>
+    </div>
+</body>
+</html>

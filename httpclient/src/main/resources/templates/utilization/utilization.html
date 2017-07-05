@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/fragments :: head-common"></head>
+<body>
+	<div th:replace="common/fragments :: header"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div th:replace="common/fragments :: navigation"></div>
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<h2 class="page-header">Utilization Sample</h2>
+				<div class="table-container">
+					<div th:include="common/fragments :: operation-message-container"></div>
+					<table cellspacing="0" width="100%">
+						<thead>
+							<tr>
+								<th class="hidden"></th>
+								<th><h4>Host Name</h4></th>
+								<th><h4>Memory Utilization</h4></th>
+								<th><h4>CPU Utilization</h4></th>
+								<th><h4>Network Utilization</h4></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="utilization : ${utilizations}">
+								<td class="hidden"><span class="utilization-key" th:text="${utilization.value.viewId}"></span></td>
+								<td height="150px"><span th:text="${utilization.value.hostName}"></span></td>
+								<td><span th:id="${utilization.value.viewId} + '-mu'" class="hidden memory-data" th:text="${utilization.value.memoryUtilization} ? (${utilization.value.memoryUtilization.utilization} ? ${utilization.value.memoryUtilization.utilization}  : '0.0') : '0.0'"></span>
+									<span th:id="${utilization.value.viewId} + '-memoryGaugeContainer'"></span>
+								</td>
+								<td><span th:id="${utilization.value.viewId} + '-cu'" class="hidden cpu-data" th:text="${utilization.value.cpuUtilization} ? (${utilization.value.cpuUtilization.utilization} ? ${utilization.value.cpuUtilization.utilization} : '0.0') : '0.0'"></span>
+									<span th:id="${utilization.value.viewId} + '-cpuGaugeContainer'"></span>
+								</td>
+								<td><span th:id="${utilization.value.viewId} + '-nu'" class="hidden network-data" th:text="${utilization.value.networkUtilization} ? (${utilization.value.networkUtilization.utilization} ? ${utilization.value.networkUtilization.utilization} : '0.0') : '0.0'"></span>
+									<span th:id="${utilization.value.viewId} + '-networkGaugeContainer'"></span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:replace="common/fragments :: common-scripts"></div>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="/javascript/d3-extension/guage.js"></script>
+	<script type="text/javascript">
+		var gauges = [];
+		
+		function createGauge(name, label, min, max)
+		{
+			var config = 
+			{
+				size: 120,
+				label: label,
+				min: undefined != min ? min : 0,
+				max: undefined != max ? max : 100,
+				minorTicks: 5
+			}
+			
+			var range = config.max - config.min;
+			config.yellowZones = [{ from: config.min + range*0.75, to: config.min + range*0.9 }];
+			config.redZones = [{ from: config.min + range*0.9, to: config.max }];
+			
+			gauges[name] = new Gauge(name + "GaugeContainer", config);
+			gauges[name].render();
+		}
+		
+		function createGauges()
+		{
+			var elems = document.getElementsByClassName("utilization-key");
+			$.each(elems, function(idx, elem) {
+				createGauge(elem.innerHTML + "-memory", "Memory");
+				gauges[elem.innerHTML + "-memory"].redraw(parseFloat(document.getElementById(elem.innerHTML + "-mu").innerHTML));
+				createGauge(elem.innerHTML + "-cpu", "CPU");
+				gauges[elem.innerHTML + "-cpu"].redraw(parseFloat(document.getElementById(elem.innerHTML + "-cu").innerHTML));
+				createGauge(elem.innerHTML + "-network", "Network");
+				gauges[elem.innerHTML + "-network"].redraw(parseFloat(document.getElementById(elem.innerHTML + "-nu").innerHTML));
+			});
+		}
+		
+		function updateGauges()
+		{
+			for (var key in gauges)
+			{
+				gauges[key].redraw(value);
+			}
+		}
+		
+		function getRandomValue(gauge)
+		{
+			var overflow = 0; //10;
+			return gauge.config.min - overflow + (gauge.config.max - gauge.config.min + overflow*2) *  Math.random();
+		}
+		
+		function initialize()
+		{
+			createGauges();
+		}
+		
+		initialize();
+	</script>
+</body>
+</html>
